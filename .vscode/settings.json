@@ -1,0 +1,13 @@
+{
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+  "rust-analyzer.server.path": "/home/laker/.cargo/bin/rust-analyzer",
+  "rust-analyzer.server.extraEnv": {
+    "PATH": "/home/laker/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
+  },
+  "rust-analyzer.inlayHints.typeHints.enable": true,
+  "rust-analyzer.inlayHints.parameterHints.enable": true,
+  "rust-analyzer.inlayHints.closureReturnTypeHints.enable": "always",
+  "rust-analyzer.inlayHints.chainingHints.enable": true,
+  "rust-analyzer.checkOnSave": true
+}
