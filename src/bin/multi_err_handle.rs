@@ -12,7 +12,17 @@ struct Expiration{
     month:u32,
     year:u32
 }
+
+#[derive(Debug)]
+enum CreditCardError{
+   InvalidInput(String),
+   Other(String,String)
+}
+
 fn main(){
+
+    env_logger::init();
+
     let credit_cards:HashMap<&str,&str> = HashMap::from([
         ("amy","1234567 04 25 123"),
         ("bob","1234567 06 25 123"),
@@ -29,16 +39,22 @@ fn main(){
             println!("\nCreditcard info: {card:?}");
         },
         Err(e) => {
-            println!("{}", e);
+           match &e {
+            CreditCardError::InvalidInput(msg) => println!("\nInvalid input: {msg}"),
+            CreditCardError::Other(_, _) => println!("\nSomething went wrong please try again later"),
+           }
+
+           //log the error to a file or monitoring system
+        log::error!("Error getting credit card info for user {}: {:?}", name, e);
         }
     }
 }
 
-fn get_credit_card_info<'a>(credit_cards:&'a HashMap<&str,&str>,name:&str)->Result<Card, String>{
+fn get_credit_card_info<'a>(credit_cards:&'a HashMap<&str,&str>,name:&str)->Result<Card, CreditCardError>{
     
-    let card_string = credit_cards.get(name).ok_or(format!("No credit card info found for user: {}", name))?; 
+    let card_string = credit_cards.get(name).ok_or(CreditCardError::InvalidInput(format!("No credit card info found for user: {}", name)))?; 
 
-    let card = parse_card(card_string)?;
+    let card = parse_card(card_string).map_err(|e| CreditCardError::Other(format!("Failed to parse card info for user: {}", name), e))?;
 
     Ok(card)
 }
